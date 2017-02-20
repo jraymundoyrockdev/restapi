@@ -2,6 +2,7 @@
 
 namespace RestApi;
 use RestApi\Entity\Vehicle;
+use RestApi\Repositories\VehicleRepository;
 
 class CarmudiApi extends AbstractRestApi
 {
@@ -19,9 +20,8 @@ class CarmudiApi extends AbstractRestApi
         $product->setEngineDisplacement('test2');
         $product->setPower('test3');
 
-        $this->em->persist($product);
-        $this->em->flush();
-
+        $test = new VehicleRepository();
+        $test->save($product);
 
         echo 'test'; die;
         if (method_exists($this, self::METHOD_ACTION[$this->method])) {

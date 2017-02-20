@@ -4,11 +4,11 @@
 header("Access-Control-Allow-Methods: *");
 header("Content-Type: application/json");*/
 
-namespace RestApi;
+namespace RestApi\Repositories;
 
 use RestApi\Resolvers\ItProvidesConnection;
 
-class BaseClass
+class AbstractBaseRepository
 {
     use ItProvidesConnection;
 

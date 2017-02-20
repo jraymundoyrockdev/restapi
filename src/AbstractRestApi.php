@@ -5,7 +5,7 @@ namespace RestApi;
 use Exception;
 use RestApi\Excetions\InvalidTokenException;
 
-abstract class AbstractRestApi extends BaseClass
+abstract class AbstractRestApi
 {
     use ItProvidesTokenValidation;
 
@@ -27,8 +27,6 @@ abstract class AbstractRestApi extends BaseClass
      */
     public function __construct($request)
     {
-        parent::__construct();
-
         if (!$this->validateToken('sampleToken')) {
             throw new InvalidTokenException("Invalid Token");
         }
