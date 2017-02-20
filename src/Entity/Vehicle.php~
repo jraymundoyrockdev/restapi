@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @Entity @Table(name="vehicles")
+ **/
+class Vehicle
+{
+    /** @Id @Column(type="integer") @GeneratedValue * */
+    protected $id;
+
+    /** @Column(type="string") * */
+    protected $name;
+
+    /** @Column(type="string") * */
+    protected $engineDisplacement;
+
+    /** @Column(type="string") * */
+    protected $power;
+
+}
