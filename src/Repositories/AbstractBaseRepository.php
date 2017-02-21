@@ -12,6 +12,9 @@ class AbstractBaseRepository
 {
     use ItProvidesConnection;
 
+    /**
+     * AbstractBaseRepository constructor.
+     */
     public function __construct()
     {
         $this->connect();

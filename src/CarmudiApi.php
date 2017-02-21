@@ -48,8 +48,7 @@ class CarmudiApi extends AbstractRestApi
 
     /**
      * @param $request
-     *
-     * @return Entity\Vehicle
+     * @return \Symfony\Component\HttpFoundation\Response|ErrorResponse|ValidResponse
      */
     protected function create($request)
     {
@@ -65,7 +64,7 @@ class CarmudiApi extends AbstractRestApi
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response|static
+     * @return \Symfony\Component\HttpFoundation\Response|ValidResponse
      */
     protected function all()
     {

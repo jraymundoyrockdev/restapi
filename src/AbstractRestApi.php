@@ -4,6 +4,7 @@ namespace RestApi;
 
 use Exception;
 use RestApi\Excetions\InvalidTokenException;
+use RestApi\Resolvers\ItProvidesTokenValidation;
 
 abstract class AbstractRestApi
 {

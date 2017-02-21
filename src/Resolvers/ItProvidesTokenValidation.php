@@ -1,6 +1,6 @@
 <?php
 
-namespace RestApi;
+namespace RestApi\Resolvers;
 
 trait ItProvidesTokenValidation
 {
