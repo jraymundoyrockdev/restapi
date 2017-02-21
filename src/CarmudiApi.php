@@ -7,16 +7,17 @@ use RestApi\Repositories\VehicleRepository;
 use RestApi\Response\ErrorResponse;
 use RestApi\Response\HttpResponsesService;
 use RestApi\Response\ValidResponse;
+use RestApi\Transformers\VehicleTransformer;
 use RestApi\Validation\VehicleValidation;
 
 class CarmudiApi extends AbstractRestApi
 {
     const METHOD_ACTION = ['POST' => 'create', 'GET' => 'all'];
 
-    private $dbh;
     private $request;
     private $server;
     private $validation;
+    private $vehicleRepository;
 
     /**
      * CarmudiApi constructor.
@@ -30,6 +31,7 @@ class CarmudiApi extends AbstractRestApi
         $this->request = $request;
         $this->server = $server;
         $this->validation = new VehicleValidation();
+        $this->vehicleRepository = new VehicleRepository;
         $this->response = new HttpResponsesService(new ValidResponse(), new ErrorResponse());
     }
 
@@ -38,7 +40,7 @@ class CarmudiApi extends AbstractRestApi
         $action = self::METHOD_ACTION[$this->method];
 
         if (!method_exists($this, $action)) {
-            return $this->response->error()->respondUnprocessableEntity('Method does not exist');
+            return $this->response->error()->respondUnprocessableEntity('Invalid Operation');
         }
 
         return $this->{$action}($this->request);
@@ -54,22 +56,24 @@ class CarmudiApi extends AbstractRestApi
         if (!$this->validation->validate($this->request)) {
             return $this->response->error()->respondUnprocessableEntity('All fields are required.');
         }
-        
+
         $vehicle = EntityFactory::factory($request['name'], $request['engine_displacement'], $request['power']);
 
-        $repository = new VehicleRepository();
-        $repository->save($vehicle);
+        $this->vehicleRepository->save($vehicle);
 
         return $this->response->fractal()->respondCreated('Inserted new vehicle.');
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response|static
+     */
     protected function all()
     {
-        $sth = $this->dbh->prepare("SELECT * FROM vehicle");
-        $sth->execute();
+        $result = $this->vehicleRepository->findAll();
 
-        $result = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $transformer = new VehicleTransformer();
+        $this->response->fractal()->setData($transformer->transform($result));
 
-        print_r($result);
+        return $this->response->fractal()->respondSuccess();
     }
 }

@@ -6,6 +6,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ValidResponse extends AbstractHttpResponse
 {
+    private $data = [];
+
     /**
      * @param string $message
      *
@@ -26,6 +28,15 @@ class ValidResponse extends AbstractHttpResponse
         return $this->setStatusCode(Response::HTTP_CREATED)->respondWithSuccess($message);
     }
 
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    public function getData()
+    {
+        return $this->data;
+    }
     /**
      * @param $messageDetail
      *
@@ -53,7 +64,8 @@ class ValidResponse extends AbstractHttpResponse
             'result' => 'success',
             'details' => [
                 'title' => $title,
-                'message' => $detail
+                'message' => $detail,
+                'data' => $this->data
             ]
         ];
     }

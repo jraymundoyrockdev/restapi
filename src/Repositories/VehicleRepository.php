@@ -20,11 +20,6 @@ class VehicleRepository extends AbstractBaseRepository implements VehicleInterfa
         return $vehicle;
     }
 
-    public function getAll()
-    {
-        // TODO: Implement findAll() method.
-    }
-
     public function findById($vehicleId)
     {
         // TODO: Implement findAll() method.
@@ -34,7 +29,7 @@ class VehicleRepository extends AbstractBaseRepository implements VehicleInterfa
 
     public function findAll()
     {
-        // TODO: Implement findAll() method.
+        return $this->em->getRepository('RestApi\Entity\Vehicle')->findAll();
     }
 }
 
