@@ -10,7 +10,7 @@ class VehicleValidation implements ValidationInterface
      */
     public function validate($fields = [])
     {
-        if (empty($fields['name'] && empty($fields['engine_displacement'] && empty($fields['power'])))) {
+        if (empty($fields['name']) || empty($fields['engine_displacement']) || empty($fields['power'])) {
             return false;
         }
 

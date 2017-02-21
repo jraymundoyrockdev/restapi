@@ -4,6 +4,9 @@ namespace RestApi;
 
 use RestApi\Entity\EntityFactory;
 use RestApi\Repositories\VehicleRepository;
+use RestApi\Response\ErrorResponse;
+use RestApi\Response\HttpResponsesService;
+use RestApi\Response\ValidResponse;
 use RestApi\Validation\VehicleValidation;
 
 class CarmudiApi extends AbstractRestApi
@@ -27,18 +30,18 @@ class CarmudiApi extends AbstractRestApi
         $this->request = $request;
         $this->server = $server;
         $this->validation = new VehicleValidation();
+        $this->response = new HttpResponsesService(new ValidResponse(), new ErrorResponse());
     }
 
     public function processApi()
     {
-        if (!$this->validation->validate($this->request)) {
-            return false;
+        $action = self::METHOD_ACTION[$this->method];
+
+        if (!method_exists($this, $action)) {
+            return $this->response->error()->respondUnprocessableEntity('Method does not exist');
         }
 
-        if (method_exists($this, self::METHOD_ACTION[$this->method])) {
-            $action = self::METHOD_ACTION[$this->method];
-            $this->{$action}($this->request);
-        }
+        return $this->{$action}($this->request);
     }
 
     /**
@@ -48,12 +51,16 @@ class CarmudiApi extends AbstractRestApi
      */
     protected function create($request)
     {
+        if (!$this->validation->validate($this->request)) {
+            return $this->response->error()->respondUnprocessableEntity('All fields are required.');
+        }
+        
         $vehicle = EntityFactory::factory($request['name'], $request['engine_displacement'], $request['power']);
 
         $repository = new VehicleRepository();
         $repository->save($vehicle);
 
-        return $vehicle;
+        return $this->response->fractal()->respondCreated('Inserted new vehicle.');
     }
 
     protected function all()
