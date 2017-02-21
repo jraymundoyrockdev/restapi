@@ -10,7 +10,7 @@ if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
 
 try {
     $API = new CarmudiApi($_REQUEST, $_SERVER);
-    echo $API->processAPI();
+    echo $API->processApi();
 } catch (Exception $e) {
     echo json_encode(Array('error' => $e->getMessage()));
 }

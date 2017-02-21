@@ -14,7 +14,7 @@ class Vehicle
     protected $name;
 
     /** @Column(type="string") * */
-    protected $engineDisplacement;
+    protected $engine_displacement;
 
     /** @Column(type="string") * */
     protected $power;
@@ -60,7 +60,7 @@ class Vehicle
      */
     public function setEngineDisplacement($engineDisplacement)
     {
-        $this->engineDisplacement = $engineDisplacement;
+        $this->engine_displacement = $engineDisplacement;
 
         return $this;
     }
@@ -72,7 +72,7 @@ class Vehicle
      */
     public function getEngineDisplacement()
     {
-        return $this->engineDisplacement;
+        return $this->engine_displacement;
     }
 
     /**

@@ -15,6 +15,9 @@ class VehicleRepository extends AbstractBaseRepository implements VehicleInterfa
     public function save(Vehicle $vehicle)
     {
         $this->em->persist($vehicle);
+        $this->em->flush();
+
+        return $vehicle;
     }
 
     public function getAll()

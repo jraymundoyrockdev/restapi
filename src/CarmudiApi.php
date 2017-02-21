@@ -1,43 +1,59 @@
 <?php
 
 namespace RestApi;
-use RestApi\Entity\Vehicle;
+
+use RestApi\Entity\EntityFactory;
 use RestApi\Repositories\VehicleRepository;
+use RestApi\Validation\VehicleValidation;
 
 class CarmudiApi extends AbstractRestApi
 {
     const METHOD_ACTION = ['POST' => 'create', 'GET' => 'all'];
 
     private $dbh;
+    private $request;
+    private $server;
+    private $validation;
 
+    /**
+     * CarmudiApi constructor.
+     * @param $request
+     * @param $server
+     */
     public function __construct($request, $server)
     {
         parent::__construct($server);
 
+        $this->request = $request;
+        $this->server = $server;
+        $this->validation = new VehicleValidation();
+    }
 
-        $product = new Vehicle();
-        $product->setName('newestproductioname');
-        $product->setEngineDisplacement('test2');
-        $product->setPower('test3');
+    public function processApi()
+    {
+        if (!$this->validation->validate($this->request)) {
+            return false;
+        }
 
-        $test = new VehicleRepository();
-        $test->save($product);
-
-        echo 'test'; die;
         if (method_exists($this, self::METHOD_ACTION[$this->method])) {
-
-            $this->dbh = $this->connect();
-
-            echo $this->method;
-            echo $action = self::METHOD_ACTION[$this->method]; die;
-
-            $this->{$action}();
+            $action = self::METHOD_ACTION[$this->method];
+            $this->{$action}($this->request);
         }
     }
 
-    protected function create()
+    /**
+     * @param $request
+     *
+     * @return Entity\Vehicle
+     */
+    protected function create($request)
     {
-        echo 'post';
+        $vehicle = EntityFactory::factory($request['name'], $request['engine_displacement'], $request['power']);
+
+        $repository = new VehicleRepository();
+        $repository->save($vehicle);
+
+        return $vehicle;
     }
 
     protected function all()
