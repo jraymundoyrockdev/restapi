@@ -39,6 +39,11 @@ abstract class AbstractRestApi
     }
 
     /**
+     * @return mixed
+     */
+    abstract function processApi();
+
+    /**
      * @return array
      */
     private function getRequestArgs()

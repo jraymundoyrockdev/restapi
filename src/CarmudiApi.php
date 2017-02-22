@@ -12,12 +12,11 @@ use RestApi\Validation\VehicleValidation;
 
 class CarmudiApi extends AbstractRestApi
 {
-    const METHOD_ACTION = ['POST' => 'create', 'GET' => 'all'];
-
     private $request;
     private $server;
     private $validation;
     private $vehicleRepository;
+    protected $response;
 
     /**
      * CarmudiApi constructor.
@@ -35,15 +34,22 @@ class CarmudiApi extends AbstractRestApi
         $this->response = new HttpResponsesService(new ValidResponse(), new ErrorResponse());
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response|ErrorResponse
+     */
     public function processApi()
     {
-        $action = self::METHOD_ACTION[$this->method];
+        if (!Route::validateRoutes($this->endpoint, $this->method, $this->verb)) {
+            return $this->response->error()->respondErrorNotFound();
+        }
 
-        if (!method_exists($this, $action)) {
+        $method = Route::getFunctionInRoutes($this->endpoint, $this->method);
+
+        if (!method_exists($this, $method)) {
             return $this->response->error()->respondUnprocessableEntity('Invalid Operation');
         }
 
-        return $this->{$action}($this->request);
+        return $this->{$method}($this->request);
     }
 
     /**
